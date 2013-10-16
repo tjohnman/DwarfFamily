@@ -1,5 +1,7 @@
 package de.ninjasoft.dwarffamily;
 
+import java.util.ArrayList;
+
 public class Dwarf {
 	private Integer id;
 	private String name;
@@ -8,9 +10,9 @@ public class Dwarf {
 	private String gender;
 	private Dwarf mother;
 	private Dwarf farther;
-	private Dwarf[] children;
+	private ArrayList<Dwarf> children;
 
-	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf farther, Dwarf[] children, String birth, String death) {
+	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf farther, ArrayList<Dwarf> children, String birth, String death) {
 		this.setId(id);
 		this.setName(name);
 		this.setGender(gender);
@@ -19,6 +21,26 @@ public class Dwarf {
 		this.setChildren(children);
 		this.setBirth(birth);
 		this.setDeath(death);
+	}
+
+	public void print() {
+		System.out.println(id);
+		System.out.println(name);
+		System.out.println(gender);
+		System.out.println(birth);
+		System.out.println(death);
+		if (mother != null) {
+			System.out.println(mother.getName());
+		}
+		if (farther != null) {
+			System.out.println(farther.getName());
+		}
+		if (children != null) {
+			for (int i = 0; i < children.size(); i++) {
+				System.out.println(children.get(i).getName());
+			}
+		}
+		System.out.println();
 	}
 
 	public String getDeath() {
@@ -61,14 +83,6 @@ public class Dwarf {
 		this.farther = farther;
 	}
 
-	public Dwarf[] getChildren() {
-		return children;
-	}
-
-	public void setChildren(Dwarf[] children) {
-		this.children = children;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -83,5 +97,13 @@ public class Dwarf {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public ArrayList<Dwarf> getChildren() {
+		return children;
+	}
+
+	public void setChildren(ArrayList<Dwarf> children) {
+		this.children = children;
 	}
 }

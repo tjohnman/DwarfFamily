@@ -2,6 +2,7 @@ package de.ninjasoft.dwarffamily;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,7 +16,6 @@ import org.xml.sax.SAXException;
 
 public class Main {
 	public static void main(String[] args) throws SAXException, IOException {
-
 		try {
 			File fXmlFile = new File("/workspace/dwarffamily/region2-legends.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -27,6 +27,7 @@ public class Main {
 			NodeList nodeLst = doc.getElementsByTagName("historical_figure");
 			System.out.println("Information of all historical_figures");
 
+			ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
 			for (int s = 0; s < nodeLst.getLength(); s++) {
 
 				Node fstNode = nodeLst.item(s);
@@ -84,15 +85,74 @@ public class Main {
 							fstNm = fstNmElmnt.getChildNodes();
 							deathdate += " " + fstNm.item(0).getNodeValue();
 						}
-						
-						System.out.println(id);
-						System.out.println(name);
-						System.out.println(gender);
-						System.out.println(birthdate);
-						System.out.println(deathdate);
-						System.out.println();
+
+						dwarfs.add(new Dwarf(id, name, gender, null, null, null, birthdate, deathdate));
+
 					}
 				}
+
+			}
+
+			for (int i = 0; i < dwarfs.size(); i++) {
+				ArrayList<Dwarf> children = new ArrayList<Dwarf>();
+				Node fstNode = nodeLst.item(dwarfs.get(i).getId());
+				Element fstElmnt = (Element) fstNode;
+				NodeList fstNmElmntLst = fstElmnt.getElementsByTagName("hf_link");
+				if (fstNmElmntLst.getLength() != 0) {
+					for (int j = 0; j < fstNmElmntLst.getLength(); j++) {
+						
+						fstNode = fstNmElmntLst.item(j);
+						fstElmnt = (Element) fstNode;
+						NodeList scnNmElmntLst = fstElmnt.getElementsByTagName("link_type");
+						Element fstNmElmnt = (Element) scnNmElmntLst.item(0);
+						NodeList fstNm = fstNmElmnt.getChildNodes();
+						String type = (String) fstNm.item(0).getNodeValue();
+						if(type.contentEquals("mother")){
+							fstNode = fstNmElmntLst.item(j);
+							fstElmnt = (Element) fstNode;
+							scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
+							fstNmElmnt = (Element) scnNmElmntLst.item(0);
+							fstNm = fstNmElmnt.getChildNodes();
+							Integer motherid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
+							for(int h=0;h < dwarfs.size(); h++){
+								if(dwarfs.get(h).getId() == motherid){
+									dwarfs.get(i).setMother(dwarfs.get(h));
+									break;
+								}
+							}
+						}
+						else if(type.contentEquals("father")){
+							fstNode = fstNmElmntLst.item(j);
+							fstElmnt = (Element) fstNode;
+							scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
+							fstNmElmnt = (Element) scnNmElmntLst.item(0);
+							fstNm = fstNmElmnt.getChildNodes();
+							Integer fatherid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
+							for(int h=0;h < dwarfs.size(); h++){
+								if(dwarfs.get(h).getId() == fatherid){
+									dwarfs.get(i).setFarther(dwarfs.get(h));
+									break;
+								}
+							}
+						}
+						else if(type.contentEquals("child")){
+							fstNode = fstNmElmntLst.item(j);
+							fstElmnt = (Element) fstNode;
+							scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
+							fstNmElmnt = (Element) scnNmElmntLst.item(0);
+							fstNm = fstNmElmnt.getChildNodes();
+							Integer childid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
+							for(int h=0;h < dwarfs.size(); h++){
+								if(dwarfs.get(h).getId() == childid){
+									children.add(dwarfs.get(h));
+									break;
+								}
+							}
+						}
+					}
+				}
+				dwarfs.get(i).setChildren(children);
+				dwarfs.get(i).print();
 
 			}
 
