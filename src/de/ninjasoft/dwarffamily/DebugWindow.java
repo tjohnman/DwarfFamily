@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -22,7 +23,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 
 	private JPanel contentPanel = new JPanel(new FlowLayout());
 	private ArrayList<Dwarf> dwarfList;
-	private JButton xmlImportButton = new JButton("Import \"debug-legends.xml\"");
+	private JButton xmlImportButton = new JButton("Import a legends xml file");
 	private JButton gedExportButton = new JButton("GEDCOM file export test");
 	
 	public DebugWindow() throws HeadlessException {
@@ -53,7 +54,9 @@ public class DebugWindow extends JFrame implements ActionListener {
 		}
 		if("import debug legends".equals(e.getActionCommand()))
 		{
-			dwarfList = Control.ImportXML("debug-legends.xml");
+			JFileChooser chooser = new JFileChooser();
+			chooser.showOpenDialog(null);
+			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath());
 			gedExportButton.setEnabled(true);
 		}
 	}
