@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 public class Main {
 	public static void main(String[] args) throws SAXException, IOException {
 		try {
-			File fXmlFile = new File("/workspace/dwarffamily/region4-legends.xml");
+			File fXmlFile = new File("region4-legends.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder;
 			dBuilder = dbFactory.newDocumentBuilder();
