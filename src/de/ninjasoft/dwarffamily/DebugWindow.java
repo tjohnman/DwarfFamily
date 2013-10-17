@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.xml.sax.SAXException;
+import javax.swing.JProgressBar;
 
 public class DebugWindow extends JFrame implements ActionListener {
 
@@ -25,6 +26,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 	private ArrayList<Dwarf> dwarfList;
 	private JButton xmlImportButton = new JButton("Import a legends xml file");
 	private JButton gedExportButton = new JButton("GEDCOM file export test");
+	private final JProgressBar progressBar = new JProgressBar();
 	
 	public DebugWindow() throws HeadlessException {
 		xmlImportButton.setActionCommand("import debug legends");
@@ -37,6 +39,8 @@ public class DebugWindow extends JFrame implements ActionListener {
 		contentPanel.add(gedExportButton);
 		
 		this.setContentPane(contentPanel);
+		
+		contentPanel.add(progressBar);
 		this.pack();
 	}
 
@@ -56,7 +60,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		{
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(null);
-			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath());
+			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar);
 			gedExportButton.setEnabled(true);
 		}
 	}
