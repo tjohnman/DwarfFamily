@@ -11,8 +11,9 @@ public class Dwarf {
 	private Dwarf mother;
 	private Dwarf farther;
 	private ArrayList<Dwarf> children;
+	private Dwarf spouse;
 
-	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf farther, ArrayList<Dwarf> children, String birth, String death) {
+	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf farther, ArrayList<Dwarf> children, String birth, String death, Dwarf spouse) {
 		this.setId(id);
 		this.setName(name);
 		this.setGender(gender);
@@ -21,24 +22,28 @@ public class Dwarf {
 		this.setChildren(children);
 		this.setBirth(birth);
 		this.setDeath(death);
+		this.setSpouse(spouse);
 	}
 
 	public void print() {
-		System.out.println(id);
-		System.out.println(name);
-		System.out.println(gender);
-		System.out.println(birth);
-		System.out.println(death);
+		System.out.println("ID: " + id);
+		System.out.println("Name: " + name);
+		System.out.println("Gender " + gender);
+		System.out.println("Birthdate " + birth);
+		System.out.println("Deathdate: " + death);
 		if (mother != null) {
-			System.out.println(mother.getName());
+			System.out.println("Mother: " + mother.getName());
 		}
 		if (farther != null) {
-			System.out.println(farther.getName());
+			System.out.println("Father: " + farther.getName());
 		}
 		if (children != null) {
 			for (int i = 0; i < children.size(); i++) {
-				System.out.println(children.get(i).getName());
+				System.out.println("Child: " + children.get(i).getName());
 			}
+		}
+		if (spouse != null) {
+			System.out.println("Spouse: " + spouse.getName());
 		}
 		System.out.println();
 	}
@@ -105,5 +110,13 @@ public class Dwarf {
 
 	public void setChildren(ArrayList<Dwarf> children) {
 		this.children = children;
+	}
+
+	public Dwarf getSpouse() {
+		return spouse;
+	}
+
+	public void setSpouse(Dwarf spouse) {
+		this.spouse = spouse;
 	}
 }
