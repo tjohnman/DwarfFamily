@@ -44,7 +44,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if("export test".equals(e.getActionCommand()))
 		{
 			try {
-				Main.GedExportTest(dwarfList);
+				Control.GedExportTest(dwarfList);
 			} catch (SAXException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -53,7 +53,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		}
 		if("import debug legends".equals(e.getActionCommand()))
 		{
-			dwarfList = Main.ImportXML("debug-legends.xml");
+			dwarfList = Control.ImportXML("debug-legends.xml");
 			gedExportButton.setEnabled(true);
 		}
 	}
