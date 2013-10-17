@@ -202,10 +202,8 @@ public class Main {
 		return dwarfs;
 	}
 	
-	public static void GedExportTest() throws SAXException, IOException
+	public static void GedExportTest(ArrayList<Dwarf> dwarfs) throws SAXException, IOException
 	{
-		ArrayList<Dwarf> dwarfs = ImportXML("region4-legends.xml");
-		
 		PrintWriter writer = new PrintWriter("dwarf.ged", "UTF-8");
 		for (int i = 0; i < dwarfs.size(); i++) {
 			if (dwarfs.get(i).getGender().contentEquals("MALE")) {

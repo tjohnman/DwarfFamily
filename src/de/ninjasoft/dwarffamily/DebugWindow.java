@@ -21,18 +21,18 @@ public class DebugWindow extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -5355006794591105789L;
 
 	private JPanel contentPanel = new JPanel(new FlowLayout());
-	@SuppressWarnings("unused")
 	private ArrayList<Dwarf> dwarfList;
+	private JButton xmlImportButton = new JButton("Import \"debug-legends.xml\"");
+	private JButton gedExportButton = new JButton("GEDCOM file export test");
 	
 	public DebugWindow() throws HeadlessException {
-		JButton xmlImportButton = new JButton("Import \"debug-legends.xml\"");
 		xmlImportButton.setActionCommand("import debug legends");
 		xmlImportButton.addActionListener(this);
 		contentPanel.add(xmlImportButton);
 		
-		JButton gedExportButton = new JButton("GEDCOM file export test");
 		gedExportButton.setActionCommand("export test");
 		gedExportButton.addActionListener(this);
+		gedExportButton.setEnabled(false);
 		contentPanel.add(gedExportButton);
 		
 		this.setContentPane(contentPanel);
@@ -44,7 +44,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if("export test".equals(e.getActionCommand()))
 		{
 			try {
-				Main.GedExportTest();
+				Main.GedExportTest(dwarfList);
 			} catch (SAXException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
@@ -54,6 +54,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if("import debug legends".equals(e.getActionCommand()))
 		{
 			dwarfList = Main.ImportXML("debug-legends.xml");
+			gedExportButton.setEnabled(true);
 		}
 	}
 
