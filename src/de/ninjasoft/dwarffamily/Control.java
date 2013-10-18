@@ -11,16 +11,16 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import org.xml.sax.SAXException;
 
-public class Control{
+public class Control {
 	public static ArrayList<Dwarf> ImportXML(String filename, DebugWindow debug) {
-		
+
 		ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
 		try {
 			// First, create a new XMLInputFactory
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			// Setup a new eventReader
 			InputStream in = new FileInputStream(filename);
-			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
+			XMLEventReader eventReader = inputFactory.createXMLEventReader(in, "ISO-8859-6");
 			// read the XML document
 			Dwarf dwarf = null;
 			ArrayList<Integer> children = null;
@@ -69,8 +69,12 @@ public class Control{
 							if (event.asStartElement().getName().getLocalPart().equals("id")) {
 								event = eventReader.nextEvent();
 								System.out.println(event.asCharacters().getData());
-								dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
-								continue;
+								if (Integer.valueOf(event.asCharacters().getData()) < 0) {
+									break;
+								} else {
+									dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
+									continue;
+								}
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("death_year")) {
 								event = eventReader.nextEvent();
@@ -130,7 +134,7 @@ public class Control{
 					}
 
 				}
-				
+
 			}
 			eventReader.close();
 			for (int i = 0; i < dwarfs.size(); i++) {
