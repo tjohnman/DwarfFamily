@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 public class Control {
 	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar, final JButton gedExportButton, final JButton xmlImportButton)
 	{
-		
 		File fXmlFile = new File(filename);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = null;
@@ -30,6 +29,7 @@ public class Control {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		Document doc = null;
 		try {
 			doc = dBuilder.parse(fXmlFile);
@@ -54,66 +54,48 @@ public class Control {
 	    			if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
 
 	    				Element fstElmnt = (Element) fstNode;
-	    				NodeList fstNmElmntLst = fstElmnt.getElementsByTagName("race");
-	    				Element fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    				NodeList fstNm;
+	    				Node fstNmElmnt = fstElmnt.getElementsByTagName("race").item(0);
 	    				String race;
 	    				if (fstNmElmnt != null) {
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					race = fstNm.item(0).getNodeValue();
+	    					race = fstNmElmnt.getChildNodes().item(0).getNodeValue();
 	    				} else {
 	    					race = "unknown";
 	    				}
 	    				
 
-	    				if (race.contentEquals("DWARF")) {
+	    				if (race.contentEquals("DWARF")) {					
 	    					String name;
 	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("name");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					if (fstNmElmnt != null) {
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						name = fstNm.item(0).getNodeValue();
+	    					Node nameNode = fstElmnt.getElementsByTagName("name").item(0);
+	    					if (nameNode != null) {
+	    						name = nameNode.getChildNodes().item(0).getNodeValue();
 	    					} else {
 	    						name = "unknown";
 	    					}
-	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("caste");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					String gender = fstNm.item(0).getNodeValue();
 
-	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("id");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					Integer id = Integer.valueOf(fstNm.item(0).getNodeValue());
+	    					String gender = fstElmnt.getElementsByTagName("caste").item(0).getChildNodes().item(0).getNodeValue();
+	    					Integer id = Integer.valueOf
+	    					(
+	    							fstElmnt.getElementsByTagName("id").item(0).getChildNodes().item(0).getNodeValue()
+	    					);
 	    					
-	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("birth_seconds72");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					String birthdate = secondsToDate(Integer.valueOf(fstNm.item(0).getNodeValue()));
+	    					String birthdate = secondsToDate
+							(
+									Integer.valueOf(
+									fstElmnt.getElementsByTagName("birth_seconds72").item(0).getChildNodes().item(0).getNodeValue()
+									)
+							);
+	    					
+	    					birthdate += " " + fstElmnt.getElementsByTagName("birth_year").item(0).getChildNodes().item(0).getNodeValue();
 
-	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("birth_year");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					birthdate += " " + fstNm.item(0).getNodeValue();
-
-	    					fstElmnt = (Element) fstNode;
-	    					fstNmElmntLst = fstElmnt.getElementsByTagName("death_seconds72");
-	    					fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    					fstNm = fstNmElmnt.getChildNodes();
-	    					Integer death = Integer.valueOf(fstNm.item(0).getNodeValue());
+	    					Integer death = Integer.valueOf(
+								fstElmnt.getElementsByTagName("death_seconds72").item(0).getChildNodes().item(0).getNodeValue()
+							);
+	    					
 	    					String deathdate = "alive";
 	    					if (death >= 1) {
 	    						deathdate = secondsToDate(death);
-	    						fstElmnt = (Element) fstNode;
-	    						fstNmElmntLst = fstElmnt.getElementsByTagName("death_year");
-	    						fstNmElmnt = (Element) fstNmElmntLst.item(0);
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						deathdate += " " + fstNm.item(0).getNodeValue();
+	    						deathdate += " " + fstElmnt.getElementsByTagName("death_year").item(0).getChildNodes().item(0).getNodeValue();
 	    					}
 
 	    					dwarfs.add(new Dwarf(id, name, gender, null, null, null, birthdate, deathdate, null));
