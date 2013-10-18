@@ -4,12 +4,16 @@ import java.util.ArrayList;
 
 public class Dwarf {
 	private Integer id;
-	private String name;
-	private String deathday;
-	private String birthday;
-	private String deathyear;
-	private String birthyear;
-	private String gender;
+	private String name = "unknown";
+	private String deathday= "unknown";
+	private String birthday= "unknown";
+	private String deathyear= "unknown";
+	private String birthyear= "unknown";
+	private String gender= "unknown";
+	private Integer motherid;
+	private Integer fatherid;
+	private Integer spouseid;
+	private ArrayList<Integer> childrenids;
 	private Dwarf mother;
 	private Dwarf farther;
 	private ArrayList<Dwarf> children;
@@ -123,5 +127,45 @@ public class Dwarf {
 	}
 	public void setBirthyear(String birthyear) {
 		this.birthyear = birthyear;
+	}
+
+
+	public Integer getMotherid() {
+		return motherid;
+	}
+
+
+	public void setMotherid(Integer motherid) {
+		this.motherid = motherid;
+	}
+
+
+	public Integer getFatherid() {
+		return fatherid;
+	}
+
+
+	public void setFatherid(Integer fatherid) {
+		this.fatherid = fatherid;
+	}
+
+
+	public Integer getSpouseid() {
+		return spouseid;
+	}
+
+
+	public void setSpouseid(Integer spouseid) {
+		this.spouseid = spouseid;
+	}
+
+
+	public ArrayList<Integer> getChildrenids() {
+		return childrenids;
+	}
+
+
+	public void setChildrenids(ArrayList<Integer> childrenids) {
+		this.childrenids = childrenids;
 	}
 }

@@ -23,11 +23,13 @@ public class Control {
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
 			// read the XML document
 			Dwarf dwarf = null;
+			ArrayList<Integer> children = null;
 
 			while (eventReader.hasNext()) {
 				XMLEvent event = eventReader.nextEvent();
 				if (event.isStartElement() && event.asStartElement().getName().getLocalPart() == "historical_figure") {
 					dwarf = new Dwarf();
+					children = new ArrayList<Integer>();
 					Boolean histfig = true;
 					while (histfig) {
 						event = eventReader.nextEvent();
@@ -83,9 +85,46 @@ public class Control {
 								dwarf.setBirthyear(event.asCharacters().getData());
 								continue;
 							}
+							if (event.asStartElement().getName().getLocalPart().equals("link_type")) {
+								event = eventReader.nextEvent();
+								if (event.asCharacters().getData().contentEquals("mother")) {
+									do {
+										event = eventReader.nextEvent();
+									} while (!event.isStartElement());
+									event = eventReader.nextEvent();
+									dwarf.setMotherid(Integer.valueOf(event.asCharacters().getData()));
+									continue;
+								}
+								if (event.asCharacters().getData().contentEquals("father")) {
+									do {
+										event = eventReader.nextEvent();
+									} while (!event.isStartElement());
+									event = eventReader.nextEvent();
+									dwarf.setFatherid(Integer.valueOf(event.asCharacters().getData()));
+									continue;
+								}
+								if (event.asCharacters().getData().contentEquals("spouse")) {
+									do {
+										event = eventReader.nextEvent();
+									} while (!event.isStartElement());
+									event = eventReader.nextEvent();
+									dwarf.setSpouseid(Integer.valueOf(event.asCharacters().getData()));
+									continue;
+								}
+								if (event.asCharacters().getData().contentEquals("child")) {
+									do {
+										event = eventReader.nextEvent();
+									} while (!event.isStartElement());
+									event = eventReader.nextEvent();
+									children.add(Integer.valueOf(event.asCharacters().getData()));
+									continue;
+								}
+
+							}
 						} else if (event.isEndElement()) {
 							if (event.asEndElement().getName().getLocalPart() == "historical_figure") {
 								histfig = false;
+								dwarf.setChildrenids(children);
 								dwarfs.add(dwarf);
 							}
 						}
@@ -95,8 +134,47 @@ public class Control {
 
 			}
 
+			
 		} catch (Exception E) {
 			E.printStackTrace();
+		}
+		for (int i = 0; i < dwarfs.size(); i++) {
+			if (dwarfs.get(i).getMotherid() != null) {
+				for (int j = 0; j < dwarfs.size(); j++) {
+					if (dwarfs.get(j).getId() == dwarfs.get(i).getMotherid()) {
+						dwarfs.get(i).setMother(dwarfs.get(j));
+						break;
+					}
+				}
+			}
+			if (dwarfs.get(i).getFatherid() != null) {
+				for (int j = 0; j < dwarfs.size(); j++) {
+					if (dwarfs.get(j).getId() == dwarfs.get(i).getFatherid()) {
+						dwarfs.get(i).setFather(dwarfs.get(j));
+						break;
+					}
+				}
+			}
+			if (dwarfs.get(i).getSpouseid() != null) {
+				for (int j = 0; j < dwarfs.size(); j++) {
+					if (dwarfs.get(j).getId() == dwarfs.get(i).getSpouseid()) {
+						dwarfs.get(i).setSpouse(dwarfs.get(j));
+						break;
+					}
+				}
+			}
+			if (dwarfs.get(i).getChildrenids() != null) {
+				ArrayList<Dwarf> dwarfchildren = new ArrayList<Dwarf>();
+				for (int j = 0; j < dwarfs.size(); j++) {
+					for(int h = 0; h<dwarfs.get(i).getChildrenids().size();h++){
+						if(dwarfs.get(j).getId() == dwarfs.get(i).getChildrenids().get(h)){
+							dwarfchildren.add(dwarfs.get(j));
+							break;
+						}
+					}
+				}
+				dwarfs.get(i).setChildren(dwarfchildren);
+			}
 		}
 		debug.enableAllButtons();
 		return dwarfs;
