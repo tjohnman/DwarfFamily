@@ -196,8 +196,9 @@ public class Control {
 	    			dwarfs.get(i).setChildren(children);
 	    			dwarfs.get(i).print();
 	    		}
-	    		gedExportButton.setEnabled(true);
-	    		xmlImportButton.setEnabled(true);
+	    		
+	    		Main.dbgWindow.enableAllButtons();
+	    		progressBar.setValue(0);
 	        }   
 	    };
 	    Thread t = new Thread(runner, "Code Executer");
