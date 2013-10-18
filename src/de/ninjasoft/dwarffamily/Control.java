@@ -159,7 +159,7 @@ public class Control {
 	    						Integer fatherid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
 	    						for (int h = 0; h < dwarfs.size(); h++) {
 	    							if (dwarfs.get(h).getId() == fatherid) {
-	    								dwarfs.get(i).setFarther(dwarfs.get(h));
+	    								dwarfs.get(i).setFather(dwarfs.get(h));
 	    								break;
 	    							}
 	    						}
