@@ -79,7 +79,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 			xmlImportButton.setEnabled(false);
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(null);
-			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar, gedExportButton, xmlImportButton);
+			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar, DebugWindow.this);
 		}
 		if ("open dwarf list".equals(e.getActionCommand())) {
 			DwarfListWindow listWindow = new DwarfListWindow(dwarfList);
