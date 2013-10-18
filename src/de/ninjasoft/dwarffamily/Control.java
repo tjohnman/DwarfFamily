@@ -1,198 +1,109 @@
 package de.ninjasoft.dwarffamily;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JProgressBar;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.events.XMLEvent;
 import org.xml.sax.SAXException;
 
 public class Control {
-	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar, final JButton gedExportButton, final JButton xmlImportButton)
-	{
-		File fXmlFile = new File(filename);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = null;
+	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar, DebugWindow debug) {
+		ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
 		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// First, create a new XMLInputFactory
+			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+			// Setup a new eventReader
+			InputStream in = new FileInputStream(filename);
+			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
+			// read the XML document
+			Dwarf dwarf = null;
+
+			while (eventReader.hasNext()) {
+				XMLEvent event = eventReader.nextEvent();
+				if (event.isStartElement() && event.asStartElement().getName().getLocalPart() == "historical_figure") {
+					dwarf = new Dwarf();
+					Boolean histfig = true;
+					while (histfig) {
+						event = eventReader.nextEvent();
+						if (event.isStartElement()) {
+							if (event.asStartElement().getName().getLocalPart().equals("race")) {
+								event = eventReader.nextEvent();
+								if (event.asCharacters().getData().contentEquals("DWARF")) {
+									System.out.println(event.asCharacters().getData());
+									continue;
+								} else {
+									break;
+								}
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("name")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setName(event.asCharacters().getData());
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("caste")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setGender(event.asCharacters().getData());
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("birth_seconds72")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setBirthday(secondsToDate(Integer.valueOf(event.asCharacters().getData())));
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("death_seconds72")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setDeathday(secondsToDate(Integer.valueOf(event.asCharacters().getData())));
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("id")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("death_year")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setDeathyear(event.asCharacters().getData());
+								continue;
+							}
+							if (event.asStartElement().getName().getLocalPart().equals("birth_year")) {
+								event = eventReader.nextEvent();
+								System.out.println(event.asCharacters().getData());
+								dwarf.setBirthyear(event.asCharacters().getData());
+								continue;
+							}
+						} else if (event.isEndElement()) {
+							if (event.asEndElement().getName().getLocalPart() == "historical_figure") {
+								histfig = false;
+								dwarfs.add(dwarf);
+							}
+						}
+					}
+
+				}
+
+			}
+
+		} catch (Exception E) {
+			E.printStackTrace();
 		}
-		
-		Document doc = null;
-		try {
-			doc = dBuilder.parse(fXmlFile);
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		doc.getDocumentElement().normalize();
-
-		final NodeList nodeLst = doc.getElementsByTagName("historical_figure");
-		final ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
-		Runnable runner = new Runnable()
-	    {
-	        public void run() {
-	        	progressBar.setMaximum(nodeLst.getLength());
-	        	for (int s = 0; s < nodeLst.getLength(); s++) {
-	        		progressBar.setValue(s);
-	    			Node fstNode = nodeLst.item(s);
-	    			if (fstNode.getNodeType() == Node.ELEMENT_NODE) {
-
-	    				Element fstElmnt = (Element) fstNode;
-	    				Node fstNmElmnt = fstElmnt.getElementsByTagName("race").item(0);
-	    				String race;
-	    				if (fstNmElmnt != null) {
-	    					race = fstNmElmnt.getChildNodes().item(0).getNodeValue();
-	    				} else {
-	    					race = "unknown";
-	    				}
-	    				
-
-	    				if (race.contentEquals("DWARF")) {					
-	    					String name;
-	    					fstElmnt = (Element) fstNode;
-	    					Node nameNode = fstElmnt.getElementsByTagName("name").item(0);
-	    					if (nameNode != null) {
-	    						name = nameNode.getChildNodes().item(0).getNodeValue();
-	    					} else {
-	    						name = "unknown";
-	    					}
-
-	    					String gender = fstElmnt.getElementsByTagName("caste").item(0).getChildNodes().item(0).getNodeValue();
-	    					Integer id = Integer.valueOf
-	    					(
-	    							fstElmnt.getElementsByTagName("id").item(0).getChildNodes().item(0).getNodeValue()
-	    					);
-	    					
-	    					String birthdate = secondsToDate
-							(
-									Integer.valueOf(
-									fstElmnt.getElementsByTagName("birth_seconds72").item(0).getChildNodes().item(0).getNodeValue()
-									)
-							);
-	    					
-	    					birthdate += " " + fstElmnt.getElementsByTagName("birth_year").item(0).getChildNodes().item(0).getNodeValue();
-
-	    					Integer death = Integer.valueOf(
-								fstElmnt.getElementsByTagName("death_seconds72").item(0).getChildNodes().item(0).getNodeValue()
-							);
-	    					
-	    					String deathdate = "alive";
-	    					if (death >= 1) {
-	    						deathdate = secondsToDate(death);
-	    						deathdate += " " + fstElmnt.getElementsByTagName("death_year").item(0).getChildNodes().item(0).getNodeValue();
-	    					}
-
-	    					dwarfs.add(new Dwarf(id, name, gender, null, null, null, birthdate, deathdate, null));
-
-	    				}
-	    			}
-
-	    		}
-
-	    		for (int i = 0; i < dwarfs.size(); i++) {
-	    			ArrayList<Dwarf> children = new ArrayList<Dwarf>();
-	    			Node fstNode = nodeLst.item(dwarfs.get(i).getId());
-	    			Element fstElmnt = (Element) fstNode;
-	    			NodeList fstNmElmntLst = fstElmnt.getElementsByTagName("hf_link");
-	    			if (fstNmElmntLst.getLength() != 0) {
-	    				for (int j = 0; j < fstNmElmntLst.getLength(); j++) {
-
-	    					fstNode = fstNmElmntLst.item(j);
-	    					fstElmnt = (Element) fstNode;
-	    					NodeList scnNmElmntLst = fstElmnt.getElementsByTagName("link_type");
-	    					Element fstNmElmnt = (Element) scnNmElmntLst.item(0);
-	    					NodeList fstNm = fstNmElmnt.getChildNodes();
-	    					String type = (String) fstNm.item(0).getNodeValue();
-	    					if (type.contentEquals("mother")) {
-	    						fstNode = fstNmElmntLst.item(j);
-	    						fstElmnt = (Element) fstNode;
-	    						scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
-	    						fstNmElmnt = (Element) scnNmElmntLst.item(0);
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						Integer motherid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
-	    						for (int h = 0; h < dwarfs.size(); h++) {
-	    							if (dwarfs.get(h).getId() == motherid) {
-	    								dwarfs.get(i).setMother(dwarfs.get(h));
-	    								break;
-	    							}
-	    						}
-	    					} else if (type.contentEquals("father")) {
-	    						fstNode = fstNmElmntLst.item(j);
-	    						fstElmnt = (Element) fstNode;
-	    						scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
-	    						fstNmElmnt = (Element) scnNmElmntLst.item(0);
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						Integer fatherid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
-	    						for (int h = 0; h < dwarfs.size(); h++) {
-	    							if (dwarfs.get(h).getId() == fatherid) {
-	    								dwarfs.get(i).setFather(dwarfs.get(h));
-	    								break;
-	    							}
-	    						}
-	    					} else if (type.contentEquals("child")) {
-	    						fstNode = fstNmElmntLst.item(j);
-	    						fstElmnt = (Element) fstNode;
-	    						scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
-	    						fstNmElmnt = (Element) scnNmElmntLst.item(0);
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						Integer childid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
-	    						for (int h = 0; h < dwarfs.size(); h++) {
-	    							if (dwarfs.get(h).getId() == childid) {
-	    								children.add(dwarfs.get(h));
-	    								break;
-	    							}
-	    						}
-	    					} else if (type.contentEquals("spouse")) {
-	    						fstNode = fstNmElmntLst.item(j);
-	    						fstElmnt = (Element) fstNode;
-	    						scnNmElmntLst = fstElmnt.getElementsByTagName("hfid");
-	    						fstNmElmnt = (Element) scnNmElmntLst.item(0);
-	    						fstNm = fstNmElmnt.getChildNodes();
-	    						Integer spouseid = Integer.valueOf((String) fstNm.item(0).getNodeValue());
-	    						for (int h = 0; h < dwarfs.size(); h++) {
-	    							if (dwarfs.get(h).getId() == spouseid) {
-	    								dwarfs.get(i).setSpouse(dwarfs.get(h));
-	    								break;
-	    							}
-	    						}
-	    					}
-
-	    				}
-	    			}
-	    			dwarfs.get(i).setChildren(children);
-	    			dwarfs.get(i).print();
-	    		}
-	    		
-	    		Main.dbgWindow.enableAllButtons();
-	    		progressBar.setValue(0);
-	        }   
-	    };
-	    Thread t = new Thread(runner, "Code Executer");
-	    t.start();
-	    
-		
-		
+		debug.enableAllButtons();
 		return dwarfs;
+
 	}
-	
-	public static void GedExportTest(ArrayList<Dwarf> dwarfs) throws SAXException, IOException
-	{
+
+	public static void GedExportTest(ArrayList<Dwarf> dwarfs) throws SAXException, IOException {
 		PrintWriter writer = new PrintWriter("dwarf.ged", "UTF-8");
 		for (int i = 0; i < dwarfs.size(); i++) {
 			if (dwarfs.get(i).getGender().contentEquals("MALE")) {
@@ -212,9 +123,9 @@ public class Control {
 			writer.println("1 NAME " + dwarfs.get(i).getName());
 			writer.println("1 SEX " + dwarfs.get(i).getGender().substring(0, 1));
 			writer.println("1 BIRT");
-			writer.println("2 DATE " + dwarfs.get(i).getBirth());
+			writer.println("2 DATE " + dwarfs.get(i).getBirthday() + " " + dwarfs.get(i).getBirthyear());
 			writer.println("1 DEAT");
-			writer.println("2 DATE " + dwarfs.get(i).getDeath());
+			writer.println("2 DATE " + dwarfs.get(i).getDeathday() + " " + dwarfs.get(i).getDeathyear());
 			writer.println("");
 		}
 
