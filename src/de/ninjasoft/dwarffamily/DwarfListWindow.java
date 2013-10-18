@@ -67,7 +67,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
 		info += 	  "Birth: " + 	dwarf.getBirthday() + " " + dwarf.getBirthyear() + "\n";
 		info += 	  "Death: " + 	dwarf.getDeathday() + " " + dwarf.getDeathyear() + "\n";
 		
-		if(dwarf.getChildren().size() > 0)
+		if(dwarf.getChildren() != null && dwarf.getChildren().size() > 0)
 		{
 			info +=		  "Children:\n";
 			for(int i=0; i<dwarf.getChildren().size(); i++)
