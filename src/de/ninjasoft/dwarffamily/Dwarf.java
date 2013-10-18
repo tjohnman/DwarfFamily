@@ -4,33 +4,33 @@ import java.util.ArrayList;
 
 public class Dwarf {
 	private Integer id;
-	private String name;
-	private String death;
-	private String birth;
-	private String gender;
+	private String name = "unknown";
+	private String deathday= "unknown";
+	private String birthday= "unknown";
+	private String deathyear= "unknown";
+	private String birthyear= "unknown";
+	private String gender= "unknown";
+	private Integer motherid;
+	private Integer fatherid;
+	private Integer spouseid;
+	private ArrayList<Integer> childrenids;
 	private Dwarf mother;
 	private Dwarf farther;
 	private ArrayList<Dwarf> children;
 	private Dwarf spouse;
 
-	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf father, ArrayList<Dwarf> children, String birth, String death, Dwarf spouse) {
-		this.setId(id);
-		this.setName(name);
-		this.setGender(gender);
-		this.setMother(mother);
-		this.setFather(father);
-		this.setChildren(children);
-		this.setBirth(birth);
-		this.setDeath(death);
-		this.setSpouse(spouse);
+	
+	public Dwarf() {
+
 	}
+	
 
 	public void print() {
 		System.out.println("ID: " + id);
 		System.out.println("Name: " + name);
 		System.out.println("Gender " + gender);
-		System.out.println("Birthdate " + birth);
-		System.out.println("Deathdate: " + death);
+		System.out.println("Birthdate " + birthday + " " + birthyear);
+		System.out.println("Deathdate: " + deathday + " " + deathyear);
 		if (mother != null) {
 			System.out.println("Mother: " + mother.getName());
 		}
@@ -48,21 +48,6 @@ public class Dwarf {
 		System.out.println();
 	}
 
-	public String getDeath() {
-		return death;
-	}
-
-	public void setDeath(String death) {
-		this.death = death;
-	}
-
-	public String getBirth() {
-		return birth;
-	}
-
-	public void setBirth(String birth) {
-		this.birth = birth;
-	}
 
 	public String getGender() {
 		return gender;
@@ -118,5 +103,69 @@ public class Dwarf {
 
 	public void setSpouse(Dwarf spouse) {
 		this.spouse = spouse;
+	}
+	public String getDeathday() {
+		return deathday;
+	}
+	public void setDeathday(String deathday) {
+		this.deathday = deathday;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+	public String getDeathyear() {
+		return deathyear;
+	}
+	public void setDeathyear(String deathyear) {
+		this.deathyear = deathyear;
+	}
+	public String getBirthyear() {
+		return birthyear;
+	}
+	public void setBirthyear(String birthyear) {
+		this.birthyear = birthyear;
+	}
+
+
+	public Integer getMotherid() {
+		return motherid;
+	}
+
+
+	public void setMotherid(Integer motherid) {
+		this.motherid = motherid;
+	}
+
+
+	public Integer getFatherid() {
+		return fatherid;
+	}
+
+
+	public void setFatherid(Integer fatherid) {
+		this.fatherid = fatherid;
+	}
+
+
+	public Integer getSpouseid() {
+		return spouseid;
+	}
+
+
+	public void setSpouseid(Integer spouseid) {
+		this.spouseid = spouseid;
+	}
+
+
+	public ArrayList<Integer> getChildrenids() {
+		return childrenids;
+	}
+
+
+	public void setChildrenids(ArrayList<Integer> childrenids) {
+		this.childrenids = childrenids;
 	}
 }
