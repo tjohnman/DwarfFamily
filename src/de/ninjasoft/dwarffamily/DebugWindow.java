@@ -1,5 +1,6 @@
 package de.ninjasoft.dwarffamily;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -7,12 +8,14 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.xml.sax.SAXException;
+
 import javax.swing.JProgressBar;
 
 public class DebugWindow extends JFrame implements ActionListener {
@@ -22,25 +25,30 @@ public class DebugWindow extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = -5355006794591105789L;
 
-	private JPanel contentPanel = new JPanel(new FlowLayout());
 	private ArrayList<Dwarf> dwarfList;
-	private JButton xmlImportButton = new JButton("Import a legends xml file");
+	private JButton xmlImportButton = new JButton("Import a legends XML file");
 	private JButton gedExportButton = new JButton("GEDCOM file export test");
 	private final JProgressBar progressBar = new JProgressBar();
 
 	public DebugWindow() throws HeadlessException {
+		JPanel buttonLayout = new JPanel(new FlowLayout());
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		
 		xmlImportButton.setActionCommand("import debug legends");
 		xmlImportButton.addActionListener(this);
-		contentPanel.add(xmlImportButton);
+		buttonLayout.add(xmlImportButton);
 
 		gedExportButton.setActionCommand("export test");
 		gedExportButton.addActionListener(this);
 		gedExportButton.setEnabled(false);
-		contentPanel.add(gedExportButton);
+		buttonLayout.add(gedExportButton);
+		
+		getContentPane().add(buttonLayout);
+		getContentPane().add(progressBar);
+		
+		this.setTitle("DwarfFamily Debugging Tools");
+		this.setResizable(false);
 
-		this.setContentPane(contentPanel);
-
-		contentPanel.add(progressBar);
 		this.pack();
 	}
 
