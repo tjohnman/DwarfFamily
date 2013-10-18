@@ -33,7 +33,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 	public DebugWindow() throws HeadlessException {
 		JPanel buttonLayout = new JPanel(new FlowLayout());
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-		
+
 		xmlImportButton.setActionCommand("import debug legends");
 		xmlImportButton.addActionListener(this);
 		buttonLayout.add(xmlImportButton);
@@ -42,26 +42,26 @@ public class DebugWindow extends JFrame implements ActionListener {
 		gedExportButton.addActionListener(this);
 		gedExportButton.setEnabled(false);
 		buttonLayout.add(gedExportButton);
-		
+
 		viewDwarvesButton.setActionCommand("open dwarf list");
 		viewDwarvesButton.addActionListener(this);
 		viewDwarvesButton.setEnabled(false);
 		buttonLayout.add(viewDwarvesButton);
-		
+
 		getContentPane().add(buttonLayout);
 		getContentPane().add(progressBar);
-		
+
 		this.setTitle("DwarfFamily Debugging Tools");
 		this.setResizable(false);
 
 		this.pack();
 	}
-	
-	public void enableAllButtons()
-	{
+
+	public void enableAllButtons() {
 		gedExportButton.setEnabled(true);
 		xmlImportButton.setEnabled(true);
 		viewDwarvesButton.setEnabled(true);
+		
 	}
 
 	@Override
@@ -77,9 +77,22 @@ public class DebugWindow extends JFrame implements ActionListener {
 		}
 		if ("import debug legends".equals(e.getActionCommand())) {
 			xmlImportButton.setEnabled(false);
-			JFileChooser chooser = new JFileChooser();
+			final JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(null);
-			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar, DebugWindow.this);
+			progressBar.setIndeterminate(true);
+			Runnable r = new Runnable() {
+				public void run() {
+					if ((dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), DebugWindow.this)) != null) {
+						enableAllButtons();
+					} else {
+						xmlImportButton.setEnabled(true);
+						
+					}
+					progressBar.setIndeterminate(false);
+				}
+			};
+			Thread t = new Thread(r);
+			t.start();
 		}
 		if ("open dwarf list".equals(e.getActionCommand())) {
 			DwarfListWindow listWindow = new DwarfListWindow(dwarfList);

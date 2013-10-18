@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.JProgressBar;
+import javax.swing.JOptionPane;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 import org.xml.sax.SAXException;
 
-public class Control {
-	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar, DebugWindow debug) {
+public class Control{
+	public static ArrayList<Dwarf> ImportXML(String filename, DebugWindow debug) {
+		
 		ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
 		try {
 			// First, create a new XMLInputFactory
@@ -24,7 +24,6 @@ public class Control {
 			// read the XML document
 			Dwarf dwarf = null;
 			ArrayList<Integer> children = null;
-
 			while (eventReader.hasNext()) {
 				XMLEvent event = eventReader.nextEvent();
 				if (event.isStartElement() && event.asStartElement().getName().getLocalPart() == "historical_figure") {
@@ -131,52 +130,52 @@ public class Control {
 					}
 
 				}
-
+				
 			}
-
-			
-		} catch (Exception E) {
-			E.printStackTrace();
-		}
-		for (int i = 0; i < dwarfs.size(); i++) {
-			if (dwarfs.get(i).getMotherid() != null) {
-				for (int j = 0; j < dwarfs.size(); j++) {
-					if (dwarfs.get(j).getId() == dwarfs.get(i).getMotherid()) {
-						dwarfs.get(i).setMother(dwarfs.get(j));
-						break;
-					}
-				}
-			}
-			if (dwarfs.get(i).getFatherid() != null) {
-				for (int j = 0; j < dwarfs.size(); j++) {
-					if (dwarfs.get(j).getId() == dwarfs.get(i).getFatherid()) {
-						dwarfs.get(i).setFather(dwarfs.get(j));
-						break;
-					}
-				}
-			}
-			if (dwarfs.get(i).getSpouseid() != null) {
-				for (int j = 0; j < dwarfs.size(); j++) {
-					if (dwarfs.get(j).getId() == dwarfs.get(i).getSpouseid()) {
-						dwarfs.get(i).setSpouse(dwarfs.get(j));
-						break;
-					}
-				}
-			}
-			if (dwarfs.get(i).getChildrenids() != null) {
-				ArrayList<Dwarf> dwarfchildren = new ArrayList<Dwarf>();
-				for (int j = 0; j < dwarfs.size(); j++) {
-					for(int h = 0; h<dwarfs.get(i).getChildrenids().size();h++){
-						if(dwarfs.get(j).getId() == dwarfs.get(i).getChildrenids().get(h)){
-							dwarfchildren.add(dwarfs.get(j));
+			eventReader.close();
+			for (int i = 0; i < dwarfs.size(); i++) {
+				if (dwarfs.get(i).getMotherid() != null) {
+					for (int j = 0; j < dwarfs.size(); j++) {
+						if (dwarfs.get(j).getId() == dwarfs.get(i).getMotherid()) {
+							dwarfs.get(i).setMother(dwarfs.get(j));
 							break;
 						}
 					}
 				}
-				dwarfs.get(i).setChildren(dwarfchildren);
+				if (dwarfs.get(i).getFatherid() != null) {
+					for (int j = 0; j < dwarfs.size(); j++) {
+						if (dwarfs.get(j).getId() == dwarfs.get(i).getFatherid()) {
+							dwarfs.get(i).setFather(dwarfs.get(j));
+							break;
+						}
+					}
+				}
+				if (dwarfs.get(i).getSpouseid() != null) {
+					for (int j = 0; j < dwarfs.size(); j++) {
+						if (dwarfs.get(j).getId() == dwarfs.get(i).getSpouseid()) {
+							dwarfs.get(i).setSpouse(dwarfs.get(j));
+							break;
+						}
+					}
+				}
+				if (dwarfs.get(i).getChildrenids() != null) {
+					ArrayList<Dwarf> dwarfchildren = new ArrayList<Dwarf>();
+					for (int j = 0; j < dwarfs.size(); j++) {
+						for (int h = 0; h < dwarfs.get(i).getChildrenids().size(); h++) {
+							if (dwarfs.get(j).getId() == dwarfs.get(i).getChildrenids().get(h)) {
+								dwarfchildren.add(dwarfs.get(j));
+								break;
+							}
+						}
+					}
+					dwarfs.get(i).setChildren(dwarfchildren);
+				}
 			}
+		} catch (Exception E) {
+			E.printStackTrace();
+			JOptionPane.showMessageDialog(null, E.getMessage().toString());
+			return null;
 		}
-		debug.enableAllButtons();
 		return dwarfs;
 
 	}
