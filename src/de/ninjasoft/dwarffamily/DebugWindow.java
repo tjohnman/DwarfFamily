@@ -1,6 +1,5 @@
 package de.ninjasoft.dwarffamily;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
