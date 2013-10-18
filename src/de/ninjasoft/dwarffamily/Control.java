@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.xml.parsers.DocumentBuilder;
@@ -18,7 +19,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Control {
-	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar)
+	public static ArrayList<Dwarf> ImportXML(String filename, final JProgressBar progressBar, final JButton gedExportButton, final JButton xmlImportButton)
 	{
 		
 		File fXmlFile = new File(filename);
@@ -196,7 +197,9 @@ public class Control {
 	    			dwarfs.get(i).setChildren(children);
 	    			dwarfs.get(i).print();
 	    		}
-	        }
+	    		gedExportButton.setEnabled(true);
+	    		xmlImportButton.setEnabled(true);
+	        }   
 	    };
 	    Thread t = new Thread(runner, "Code Executer");
 	    t.start();

@@ -27,27 +27,26 @@ public class DebugWindow extends JFrame implements ActionListener {
 	private JButton xmlImportButton = new JButton("Import a legends xml file");
 	private JButton gedExportButton = new JButton("GEDCOM file export test");
 	private final JProgressBar progressBar = new JProgressBar();
-	
+
 	public DebugWindow() throws HeadlessException {
 		xmlImportButton.setActionCommand("import debug legends");
 		xmlImportButton.addActionListener(this);
 		contentPanel.add(xmlImportButton);
-		
+
 		gedExportButton.setActionCommand("export test");
 		gedExportButton.addActionListener(this);
 		gedExportButton.setEnabled(false);
 		contentPanel.add(gedExportButton);
-		
+
 		this.setContentPane(contentPanel);
-		
+
 		contentPanel.add(progressBar);
 		this.pack();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if("export test".equals(e.getActionCommand()))
-		{
+		if ("export test".equals(e.getActionCommand())) {
 			try {
 				Control.GedExportTest(dwarfList);
 			} catch (SAXException e1) {
@@ -56,12 +55,11 @@ public class DebugWindow extends JFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		if("import debug legends".equals(e.getActionCommand()))
-		{
+		if ("import debug legends".equals(e.getActionCommand())) {
+			xmlImportButton.setEnabled(false);
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(null);
-			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar);
-			gedExportButton.setEnabled(true);
+			dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), progressBar, gedExportButton, xmlImportButton);
 		}
 	}
 
