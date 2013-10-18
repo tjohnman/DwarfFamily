@@ -13,12 +13,12 @@ public class Dwarf {
 	private ArrayList<Dwarf> children;
 	private Dwarf spouse;
 
-	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf farther, ArrayList<Dwarf> children, String birth, String death, Dwarf spouse) {
+	public Dwarf(Integer id, String name, String gender, Dwarf mother, Dwarf father, ArrayList<Dwarf> children, String birth, String death, Dwarf spouse) {
 		this.setId(id);
 		this.setName(name);
 		this.setGender(gender);
 		this.setMother(mother);
-		this.setFarther(farther);
+		this.setFather(father);
 		this.setChildren(children);
 		this.setBirth(birth);
 		this.setDeath(death);
@@ -80,11 +80,11 @@ public class Dwarf {
 		this.mother = mother;
 	}
 
-	public Dwarf getFarther() {
+	public Dwarf getFather() {
 		return farther;
 	}
 
-	public void setFarther(Dwarf farther) {
+	public void setFather(Dwarf farther) {
 		this.farther = farther;
 	}
 
