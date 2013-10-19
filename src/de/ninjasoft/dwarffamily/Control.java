@@ -69,12 +69,10 @@ public class Control {
 							if (event.asStartElement().getName().getLocalPart().equals("id")) {
 								event = eventReader.nextEvent();
 								System.out.println(event.asCharacters().getData());
-								if (Integer.valueOf(event.asCharacters().getData()) < 0) {
-									break;
-								} else {
+								
 									dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
 									continue;
-								}
+								
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("death_year")) {
 								event = eventReader.nextEvent();
@@ -137,27 +135,31 @@ public class Control {
 
 			}
 			eventReader.close();
+			
 			for (int i = 0; i < dwarfs.size(); i++) {
 				if (dwarfs.get(i).getMotherid() != null) {
 					for (int j = 0; j < dwarfs.size(); j++) {
-						if (dwarfs.get(j).getId() == dwarfs.get(i).getMotherid()) {
+						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getMotherid())) {
 							dwarfs.get(i).setMother(dwarfs.get(j));
+							System.out.println("mother linked");
 							break;
 						}
 					}
 				}
 				if (dwarfs.get(i).getFatherid() != null) {
 					for (int j = 0; j < dwarfs.size(); j++) {
-						if (dwarfs.get(j).getId() == dwarfs.get(i).getFatherid()) {
+						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getFatherid())) {
 							dwarfs.get(i).setFather(dwarfs.get(j));
+							System.out.println("father linked");
 							break;
 						}
 					}
 				}
 				if (dwarfs.get(i).getSpouseid() != null) {
 					for (int j = 0; j < dwarfs.size(); j++) {
-						if (dwarfs.get(j).getId() == dwarfs.get(i).getSpouseid()) {
+						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getSpouseid())) {
 							dwarfs.get(i).setSpouse(dwarfs.get(j));
+							System.out.println("spouse linked");
 							break;
 						}
 					}
@@ -166,8 +168,9 @@ public class Control {
 					ArrayList<Dwarf> dwarfchildren = new ArrayList<Dwarf>();
 					for (int j = 0; j < dwarfs.size(); j++) {
 						for (int h = 0; h < dwarfs.get(i).getChildrenids().size(); h++) {
-							if (dwarfs.get(j).getId() == dwarfs.get(i).getChildrenids().get(h)) {
+							if (dwarfs.get(j).getId().equals(dwarfs.get(i).getChildrenids().get(h))) {
 								dwarfchildren.add(dwarfs.get(j));
+								System.out.println("child linked");
 								break;
 							}
 						}
