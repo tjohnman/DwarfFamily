@@ -69,10 +69,13 @@ public class Control {
 							if (event.asStartElement().getName().getLocalPart().equals("id")) {
 								event = eventReader.nextEvent();
 								System.out.println(event.asCharacters().getData());
-								
+								if (Integer.valueOf(event.asCharacters().getData()) >= 0) {
 									dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
 									continue;
-								
+								} else {
+									break;
+								}
+
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("death_year")) {
 								event = eventReader.nextEvent();
@@ -135,7 +138,7 @@ public class Control {
 
 			}
 			eventReader.close();
-			
+
 			for (int i = 0; i < dwarfs.size(); i++) {
 				if (dwarfs.get(i).getMotherid() != null) {
 					for (int j = 0; j < dwarfs.size(); j++) {
