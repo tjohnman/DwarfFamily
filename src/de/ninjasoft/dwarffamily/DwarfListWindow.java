@@ -1,5 +1,6 @@
 package de.ninjasoft.dwarffamily;
 
+import java.awt.Component;
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -11,6 +12,9 @@ import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class DwarfListWindow extends JFrame implements MouseListener {
 
@@ -40,10 +44,23 @@ public class DwarfListWindow extends JFrame implements MouseListener {
 		
 		textArea.setText("Select a dwarf on the list.");
 		textArea.setEditable(false);
+                
+                JPanel topArea = new JPanel();
+                topArea.setLayout(new BoxLayout(topArea, BoxLayout.X_AXIS));
+                
+                JPanel bottomArea = new JPanel();
+                bottomArea.setLayout(new BoxLayout(bottomArea, BoxLayout.X_AXIS));
 		
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
-		getContentPane().add(listScrollPane);
-		getContentPane().add(textAreaScrollPane);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+                
+                
+                topArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+                
+		bottomArea.add(listScrollPane);
+		bottomArea.add(textAreaScrollPane);
+                
+                getContentPane().add(topArea);
+                getContentPane().add(bottomArea);
 		pack();
 	}
 
