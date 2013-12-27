@@ -11,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.xml.sax.SAXException;
@@ -85,15 +86,16 @@ public class DebugWindow extends JFrame implements ActionListener {
                         }
 			progressBar.setIndeterminate(true);
 			Runnable r = new Runnable() {
-				public void run() {
-					if ((dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), DebugWindow.this)) != null) {
-						enableAllButtons();
-					} else {
-						xmlImportButton.setEnabled(true);
-						
-					}
-					progressBar.setIndeterminate(false);
-				}
+                            public void run() {
+                                if ((dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), DebugWindow.this)) != null) {
+                                    progressBar.setIndeterminate(false);    
+                                    JOptionPane.showMessageDialog(rootPane, "XML file finished importing.", "Import finished", JOptionPane.INFORMATION_MESSAGE);
+                                    enableAllButtons();
+                                } else {
+                                    xmlImportButton.setEnabled(true);	
+                                    progressBar.setIndeterminate(false);
+                                }
+                            }
 			};
 			Thread t = new Thread(r);
 			t.start();
