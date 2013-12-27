@@ -78,7 +78,11 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if ("import debug legends".equals(e.getActionCommand())) {
 			xmlImportButton.setEnabled(false);
 			final JFileChooser chooser = new JFileChooser();
-			chooser.showOpenDialog(null);
+			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+                        {
+                            xmlImportButton.setEnabled(true);
+                            return;
+                        }
 			progressBar.setIndeterminate(true);
 			Runnable r = new Runnable() {
 				public void run() {
