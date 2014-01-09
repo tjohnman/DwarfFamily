@@ -1,2 +1,7 @@
 /bin
 dwarf.ged
+/nbproject/private/
+/build/
+/dist/
+build.xml
+/nbproject/
