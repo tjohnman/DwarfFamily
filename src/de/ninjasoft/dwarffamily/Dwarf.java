@@ -63,6 +63,10 @@ public class Dwarf {
                 {
                     raw[i] = Character.toUpperCase(raw[i]);
                 }
+                else
+                {
+                    raw[i] = Character.toLowerCase(raw[i]);
+                }
             }
 
             return String.valueOf(raw);
@@ -101,6 +105,10 @@ public class Dwarf {
                 if(i==0 || Character.isWhitespace(raw[i-1]))
                 {
                     raw[i] = Character.toUpperCase(raw[i]);
+                }
+                else
+                {
+                    raw[i] = Character.toLowerCase(raw[i]);
                 }
             }
 
