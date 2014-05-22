@@ -48,7 +48,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
     private JScrollPane textAreaScrollPane = new JScrollPane(textArea);
 
     private StyledDocument doc;
-    private Style stylePlain;
+    private Style stylePlain, styleBold;
 
     public DwarfListWindow(ArrayList<Dwarf> dwarves) throws HeadlessException {
             dwarfList = dwarves;
@@ -61,6 +61,8 @@ public class DwarfListWindow extends JFrame implements MouseListener {
 
             doc = textArea.getStyledDocument();
             stylePlain = textArea.addStyle("regular", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+            styleBold = textArea.addStyle("bold", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+            StyleConstants.setBold(styleBold, true);
 
             JPanel topArea = new JPanel();
             topArea.setLayout(new BoxLayout(topArea, BoxLayout.X_AXIS));
@@ -114,7 +116,8 @@ public class DwarfListWindow extends JFrame implements MouseListener {
         doc.remove(0, doc.getLength());
 
         doc.insertString(doc.getLength(), "ID: "    + 	dwarf.getId() + "\n", stylePlain);
-        doc.insertString(doc.getLength(), "Name: "  + 	dwarf.getCasedName() + "\n", stylePlain);
+        doc.insertString(doc.getLength(), "Name: ", stylePlain);
+        doc.insertString(doc.getLength(), dwarf.getCasedName() + "\n", styleBold);
         doc.insertString(doc.getLength(), "Gender: "+ 	dwarf.getCasedGender() + "\n", stylePlain);
 
         doc.insertString(doc.getLength(), "Mother: ", stylePlain);
