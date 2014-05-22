@@ -85,9 +85,10 @@ public class DwarfListWindow extends JFrame implements MouseListener {
             this.setMinimumSize(new Dimension(800, 600));
     }
 
+    
     @Override
-    public void mouseClicked(MouseEvent e) {
-
+    public void mousePressed(MouseEvent e)
+    {
         if(e.getSource() == dataList)
         {
             try {
@@ -194,11 +195,12 @@ public class DwarfListWindow extends JFrame implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        mousePressed(e);
     }
 }
 
