@@ -29,7 +29,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 	private JButton xmlImportButton = new JButton("Import a legends XML file");
 	private JButton gedExportButton = new JButton("GEDCOM file export test");
 	private JButton viewDwarvesButton = new JButton("View dwarf list");
-	private final JProgressBar progressBar = new JProgressBar();
+	public final JProgressBar progressBar = new JProgressBar();
 
 	public DebugWindow() throws HeadlessException {
 		JPanel buttonLayout = new JPanel(new FlowLayout());
@@ -84,7 +84,7 @@ public class DebugWindow extends JFrame implements ActionListener {
                             xmlImportButton.setEnabled(true);
                             return;
                         }
-			progressBar.setIndeterminate(true);
+			
 			Runnable r = new Runnable() {
                             public void run() {
                                 if ((dwarfList = Control.ImportXML(chooser.getSelectedFile().getPath(), DebugWindow.this)) != null) {

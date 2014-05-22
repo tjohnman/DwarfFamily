@@ -115,7 +115,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
 
         doc.insertString(doc.getLength(), "ID: "    + 	dwarf.getId() + "\n", stylePlain);
         doc.insertString(doc.getLength(), "Name: "  + 	dwarf.getCasedName() + "\n", stylePlain);
-        doc.insertString(doc.getLength(), "Gender: "+ 	dwarf.getGender() + "\n", stylePlain);
+        doc.insertString(doc.getLength(), "Gender: "+ 	dwarf.getCasedGender() + "\n", stylePlain);
 
         doc.insertString(doc.getLength(), "Mother: ", stylePlain);
         if(dwarf.getMother() != null)
@@ -160,7 +160,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
         }
         else
         {
-            doc.insertString(doc.getLength(), "No offspring: \n", stylePlain);
+            doc.insertString(doc.getLength(), "No offspring.\n", stylePlain);
         }
     }
 
