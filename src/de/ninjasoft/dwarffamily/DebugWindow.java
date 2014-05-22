@@ -27,7 +27,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 
 	private ArrayList<Dwarf> dwarfList;
 	private JButton xmlImportButton = new JButton("Import a legends XML file");
-	private JButton gedExportButton = new JButton("GEDCOM file export test");
+	private JButton gedExportButton = new JButton("GEDCOM file export (experimental)");
 	private JButton viewDwarvesButton = new JButton("View dwarf list");
 	public final JProgressBar progressBar = new JProgressBar();
 
