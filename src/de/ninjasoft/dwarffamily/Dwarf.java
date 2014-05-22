@@ -52,6 +52,25 @@ public class Dwarf {
 	public String getGender() {
 		return gender;
 	}
+        
+        public String getCasedGender()
+        {
+            char[] raw = gender.toCharArray();
+                            
+            for(int i=0; i<raw.length; i++)
+            {
+                if(i==0 || Character.isWhitespace(raw[i-1]))
+                {
+                    raw[i] = Character.toUpperCase(raw[i]);
+                }
+                else
+                {
+                    raw[i] = Character.toLowerCase(raw[i]);
+                }
+            }
+
+            return String.valueOf(raw);
+        }
 
 	public void setGender(String gender) {
 		this.gender = gender;
@@ -76,6 +95,25 @@ public class Dwarf {
 	public String getName() {
 		return name;
 	}
+        
+        public String getCasedName()
+        {
+            char[] raw = name.toCharArray();
+                            
+            for(int i=0; i<raw.length; i++)
+            {
+                if(i==0 || Character.isWhitespace(raw[i-1]))
+                {
+                    raw[i] = Character.toUpperCase(raw[i]);
+                }
+                else
+                {
+                    raw[i] = Character.toLowerCase(raw[i]);
+                }
+            }
+
+            return String.valueOf(raw);
+        }
 
 	public void setName(String name) {
 		this.name = name;
