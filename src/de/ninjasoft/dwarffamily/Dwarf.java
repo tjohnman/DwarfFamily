@@ -76,6 +76,21 @@ public class Dwarf {
 	public String getName() {
 		return name;
 	}
+        
+        public String getCasedName()
+        {
+            char[] raw = name.toCharArray();
+                            
+            for(int i=0; i<raw.length; i++)
+            {
+                if(i==0 || Character.isWhitespace(raw[i-1]))
+                {
+                    raw[i] = Character.toUpperCase(raw[i]);
+                }
+            }
+
+            return String.valueOf(raw);
+        }
 
 	public void setName(String name) {
 		this.name = name;

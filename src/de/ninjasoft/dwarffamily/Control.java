@@ -36,7 +36,7 @@ public class Control {
 							if (event.asStartElement().getName().getLocalPart().equals("race")) {
 								event = eventReader.nextEvent();
 								if (event.asCharacters().getData().contentEquals("DWARF")) {
-									System.out.println(event.asCharacters().getData());
+									//System.out.println(event.asCharacters().getData());
 									continue;
 								} else {
 									break;
@@ -44,31 +44,31 @@ public class Control {
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("name")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setName(event.asCharacters().getData());
 								continue;
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("caste")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setGender(event.asCharacters().getData());
 								continue;
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("birth_seconds72")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setBirthday(secondsToDate(Integer.valueOf(event.asCharacters().getData())));
 								continue;
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("death_seconds72")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setDeathday(secondsToDate(Integer.valueOf(event.asCharacters().getData())));
 								continue;
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("id")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								if (Integer.valueOf(event.asCharacters().getData()) >= 0) {
 									dwarf.setId(Integer.valueOf(event.asCharacters().getData()));
 									continue;
@@ -79,13 +79,13 @@ public class Control {
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("death_year")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setDeathyear(event.asCharacters().getData());
 								continue;
 							}
 							if (event.asStartElement().getName().getLocalPart().equals("birth_year")) {
 								event = eventReader.nextEvent();
-								System.out.println(event.asCharacters().getData());
+								//System.out.println(event.asCharacters().getData());
 								dwarf.setBirthyear(event.asCharacters().getData());
 								continue;
 							}
@@ -144,7 +144,7 @@ public class Control {
 					for (int j = 0; j < dwarfs.size(); j++) {
 						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getMotherid())) {
 							dwarfs.get(i).setMother(dwarfs.get(j));
-							System.out.println("mother linked");
+							//System.out.println("mother linked");
 							break;
 						}
 					}
@@ -153,7 +153,7 @@ public class Control {
 					for (int j = 0; j < dwarfs.size(); j++) {
 						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getFatherid())) {
 							dwarfs.get(i).setFather(dwarfs.get(j));
-							System.out.println("father linked");
+							//System.out.println("father linked");
 							break;
 						}
 					}
@@ -162,7 +162,7 @@ public class Control {
 					for (int j = 0; j < dwarfs.size(); j++) {
 						if (dwarfs.get(j).getId().equals(dwarfs.get(i).getSpouseid())) {
 							dwarfs.get(i).setSpouse(dwarfs.get(j));
-							System.out.println("spouse linked");
+							//System.out.println("spouse linked");
 							break;
 						}
 					}
@@ -173,7 +173,7 @@ public class Control {
 						for (int h = 0; h < dwarfs.get(i).getChildrenids().size(); h++) {
 							if (dwarfs.get(j).getId().equals(dwarfs.get(i).getChildrenids().get(h))) {
 								dwarfchildren.add(dwarfs.get(j));
-								System.out.println("child linked");
+								//System.out.println("child linked");
 								break;
 							}
 						}
