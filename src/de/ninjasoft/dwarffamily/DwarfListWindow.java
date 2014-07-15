@@ -15,13 +15,11 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -48,7 +46,7 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
             public String getElementAt(int index) { return dwarfList.get(index).getCasedName(); }
      };
 
-    private JComboBox raceComboBox;
+    private JComboBox raceComboBox = null;
     
     private JList<String> dataList = new JList<String>(dataModel);
     private JTextPane textArea = new JTextPane();
@@ -60,6 +58,8 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
     private Style stylePlain, styleBold;
 
     public DwarfListWindow(ArrayList<Dwarf> dwarves) throws HeadlessException {
+        
+        raceComboBox = new JComboBox();
         
         initializeAll();
         
@@ -118,7 +118,8 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
         }
 
         textArea.setText(selectText);
-        raceComboBox = new JComboBox(Control.Races.toArray());
+        
+        raceComboBox.setModel(new JComboBox(Control.Races.toArray()).getModel());
         
         char[] raw = raceName.toCharArray();
 
@@ -289,7 +290,10 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == raceComboBox)
+        System.out.println(raceComboBox.getSelectedItem().toString().toUpperCase());
+        System.out.println(Control.activeRaceName.toUpperCase());
+        if(e.getSource() == raceComboBox && e.getActionCommand() == "comboBoxChanged" &&
+           raceComboBox.getSelectedItem().toString().toUpperCase().compareTo(Control.activeRaceName.toUpperCase()) != 0)
         {
             class ReImportRunnable implements Runnable
             {
