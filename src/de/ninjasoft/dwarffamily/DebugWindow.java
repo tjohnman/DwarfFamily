@@ -4,8 +4,6 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;

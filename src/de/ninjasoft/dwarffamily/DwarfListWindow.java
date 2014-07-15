@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -14,9 +15,13 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -28,7 +33,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-public class DwarfListWindow extends JFrame implements MouseListener, KeyListener {
+public class DwarfListWindow extends JFrame implements MouseListener, KeyListener, ActionListener {
 
     /**
      * 
@@ -43,6 +48,8 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
             public String getElementAt(int index) { return dwarfList.get(index).getCasedName(); }
      };
 
+    private JComboBox raceComboBox;
+    
     private JList<String> dataList = new JList<String>(dataModel);
     private JTextPane textArea = new JTextPane();
 
@@ -53,39 +60,83 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
     private Style stylePlain, styleBold;
 
     public DwarfListWindow(ArrayList<Dwarf> dwarves) throws HeadlessException {
-            dwarfList = dwarves;
+        
+        initializeAll();
+        
+        dwarfList = dwarves;
+        dataList.addMouseListener(this);
+        dataList.addKeyListener(this);
+        textArea.setEditable(false);
+        textArea.addMouseListener(this);
+        raceComboBox.addActionListener(this);
+        
+        doc = textArea.getStyledDocument();
+        stylePlain = textArea.addStyle("regular", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+        styleBold = textArea.addStyle("bold", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+        StyleConstants.setBold(styleBold, true);
 
-            dataList.addMouseListener(this);
-            dataList.addKeyListener(this);
+        JPanel topArea = new JPanel();
+        topArea.setLayout(new BoxLayout(topArea, BoxLayout.X_AXIS));
 
-            textArea.setText("Select a dwarf on the list.");
-            textArea.setEditable(false);
-            textArea.addMouseListener(this);
+        JPanel bottomArea = new JPanel();
+        bottomArea.setLayout(new BoxLayout(bottomArea, BoxLayout.X_AXIS));
 
-            doc = textArea.getStyledDocument();
-            stylePlain = textArea.addStyle("regular", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
-            styleBold = textArea.addStyle("bold", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
-            StyleConstants.setBold(styleBold, true);
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setMinimumSize(new Dimension(800, 600));
 
-            JPanel topArea = new JPanel();
-            topArea.setLayout(new BoxLayout(topArea, BoxLayout.X_AXIS));
+        topArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        
+        topArea.add(new JLabel("Race: "));
+        
+        topArea.add(raceComboBox);
+        topArea.setMaximumSize(new Dimension(800, 20));
+        
+        this.setMinimumSize(new Dimension(800, 600));
 
-            JPanel bottomArea = new JPanel();
-            bottomArea.setLayout(new BoxLayout(bottomArea, BoxLayout.X_AXIS));
+        bottomArea.add(listScrollPane);
+        bottomArea.add(textAreaScrollPane);
 
-            getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-            getContentPane().setMinimumSize(new Dimension(800, 600));
+        getContentPane().add(topArea);
+        getContentPane().add(bottomArea);
+        pack();
+    }
+    
+    private void initializeAll()
+    {
+        String raceName = Control.activeRaceName.toLowerCase();
+        
+        String selectText = "Select ";
+        if( raceName.startsWith("a") || raceName.startsWith("e") || 
+            raceName.startsWith("i") || raceName.startsWith("o") || 
+            raceName.startsWith("u"))
+        {
+            selectText += "an " + raceName + " on the list.";
+        }
+        else
+        {
+            selectText += "a " + raceName + " on the list.";
+        }
 
-            topArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+        textArea.setText(selectText);
+        raceComboBox = new JComboBox(Control.Races.toArray());
+        
+        char[] raw = raceName.toCharArray();
 
-            bottomArea.add(listScrollPane);
-            bottomArea.add(textAreaScrollPane);
+        for(int j=0; j<raw.length; j++)
+        {
+            if(j==0 || Character.isWhitespace(raw[j-1]))
+            {
+                raw[j] = Character.toUpperCase(raw[j]);
+            }
+            else
+            {
+                raw[j] = Character.toLowerCase(raw[j]);
+            }
+        }
 
-            getContentPane().add(topArea);
-            getContentPane().add(bottomArea);
-            pack();
-            
-            this.setMinimumSize(new Dimension(800, 600));
+        raceName = String.valueOf(raw);
+        
+        raceComboBox.setSelectedItem(raceName);
     }
 
     public void showDwarfData(Dwarf dwarf) throws BadLocationException
@@ -233,6 +284,34 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
         if(e.getSource() == dataList)
         {
             keyTyped(e);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == raceComboBox)
+        {
+            class ReImportRunnable implements Runnable
+            {
+                private DwarfListWindow parentWindow;
+                
+                ReImportRunnable(DwarfListWindow parent)
+                {
+                    parentWindow = parent;
+                }
+                
+                @Override
+                public void run() {
+                    parentWindow.setVisible(false);
+                    Control.debugWindow.progressBar.setIndeterminate(true);
+                    dwarfList = Control.reimportWithRace(raceComboBox.getSelectedItem().toString().toUpperCase());
+                    initializeAll();
+                    Control.debugWindow.progressBar.setIndeterminate(false);
+                    parentWindow.setVisible(true);
+                }
+            }
+            Thread t = new Thread(new ReImportRunnable(this));
+            t.start();
         }
     }
 }

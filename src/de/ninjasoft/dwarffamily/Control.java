@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.function.Consumer;
 import javax.swing.JOptionPane;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -13,8 +15,24 @@ import org.xml.sax.SAXException;
 
 public class Control {
 
-    public static ArrayList<Dwarf> ImportXML(String filename, DebugWindow debug) {
-
+    public static ArrayList<String> Races;
+    public static String importedFilename;
+    public static String activeRaceName;
+    public static DebugWindow debugWindow;
+    
+    public static ArrayList<Dwarf> reimportWithRace(String desiredRace)
+    {
+        return ImportXML(importedFilename, debugWindow, desiredRace);
+    }
+    
+    public static ArrayList<Dwarf> ImportXML(String filename, DebugWindow debug)
+    {
+        return ImportXML(filename, debug, "DWARF");
+    }
+    
+    public static ArrayList<Dwarf> ImportXML(String filename, DebugWindow debug, String desiredRace)
+    {
+        debugWindow = debug;
         debug.progressBar.setIndeterminate(false);
 
         ArrayList<Dwarf> dwarfs = new ArrayList<Dwarf>();
@@ -36,6 +54,8 @@ public class Control {
             
             eventReader.close();
             in.close();
+            
+            Races = new ArrayList<String>();
             
             debug.progressBar.setIndeterminate(false);
             debug.progressBar.setMaximum(c);
@@ -59,7 +79,13 @@ public class Control {
                         if (event.isStartElement()) {
                             if (event.asStartElement().getName().getLocalPart().equals("race")) {
                                 event = eventReader.nextEvent();
-                                if (event.asCharacters().getData().contentEquals("DWARF")) {
+                                
+                                if(!Races.contains(event.asCharacters().getData()))
+                                {
+                                    Races.add(event.asCharacters().getData());
+                                }
+                                
+                                if (event.asCharacters().getData().contentEquals(desiredRace.toUpperCase())) {
                                     //System.out.println(event.asCharacters().getData());
                                     continue;
                                 } else {
@@ -219,8 +245,31 @@ public class Control {
             debug.progressBar.setValue(0);
             return null;
         }
-        return dwarfs;
+        
+        Races.sort(Comparator.naturalOrder());
+        for(int i=0; i<Races.size(); i++)
+        {
+            String s = Races.get(i);
+            char[] raw = s.toCharArray();
+                            
+            for(int j=0; j<raw.length; j++)
+            {
+                if(j==0 || Character.isWhitespace(raw[j-1]))
+                {
+                    raw[j] = Character.toUpperCase(raw[j]);
+                }
+                else
+                {
+                    raw[j] = Character.toLowerCase(raw[j]);
+                }
+            }
 
+            Races.set(i, String.valueOf(raw));
+        }
+        importedFilename = filename;
+        activeRaceName = desiredRace;
+        
+        return dwarfs;
     }
 
     public static void GedExportTest(ArrayList<Dwarf> dwarfs) throws SAXException, IOException {
