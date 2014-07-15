@@ -4,6 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import javax.swing.filechooser.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BoxLayout;
@@ -76,7 +78,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if ("import debug legends".equals(e.getActionCommand())) {
 			xmlImportButton.setEnabled(false);
 			final JFileChooser chooser = new JFileChooser();
-                      //  chooser.setFileFilter(new _xmlFileFilterImpl());
+                        chooser.setFileFilter(new XMLFilter());
 			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
                         {
                             xmlImportButton.setEnabled(true);
@@ -104,4 +106,17 @@ public class DebugWindow extends JFrame implements ActionListener {
 			listWindow.setVisible(true);
 		}
 	}
+}
+
+class XMLFilter extends FileFilter
+{
+    @Override
+    public boolean accept(File file) {
+        return file.isDirectory() || file.getName().toLowerCase().endsWith(".xml");
+    } 
+
+    @Override
+    public String getDescription() {
+        return "XML File";
+    }
 }
