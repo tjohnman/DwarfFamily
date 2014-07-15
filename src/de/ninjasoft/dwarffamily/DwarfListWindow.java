@@ -177,6 +177,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
             {
                 try {
                     dataList.setSelectedIndex(i);
+                    dataList.ensureIndexIsVisible(i);
                     showDwarfData(dwarfList.get(i));
                     return;
                 } catch (BadLocationException ex) {
