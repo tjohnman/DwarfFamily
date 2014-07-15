@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-public class DwarfListWindow extends JFrame implements MouseListener {
+public class DwarfListWindow extends JFrame implements MouseListener, KeyListener {
 
     /**
      * 
@@ -54,6 +56,7 @@ public class DwarfListWindow extends JFrame implements MouseListener {
             dwarfList = dwarves;
 
             dataList.addMouseListener(this);
+            dataList.addKeyListener(this);
 
             textArea.setText("Select a dwarf on the list.");
             textArea.setEditable(false);
@@ -202,6 +205,35 @@ public class DwarfListWindow extends JFrame implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         mousePressed(e);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if(e.getSource() == dataList)
+        {
+            try {
+                Dwarf dwarf = dwarfList.get(dataList.getSelectedIndex());
+                showDwarfData(dwarf);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(DwarfListWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getSource() == dataList)
+        {
+            keyTyped(e);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getSource() == dataList)
+        {
+            keyTyped(e);
+        }
     }
 }
 
