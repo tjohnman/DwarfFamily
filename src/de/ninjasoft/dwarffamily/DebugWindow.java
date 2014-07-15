@@ -4,19 +4,18 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import org.xml.sax.SAXException;
-
 import javax.swing.JProgressBar;
+import org.xml.sax.SAXException;
 
 public class DebugWindow extends JFrame implements ActionListener {
 
@@ -79,6 +78,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if ("import debug legends".equals(e.getActionCommand())) {
 			xmlImportButton.setEnabled(false);
 			final JFileChooser chooser = new JFileChooser();
+                        chooser.setFileFilter(new _xmlFileFilterImpl());
 			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
                         {
                             xmlImportButton.setEnabled(true);
@@ -106,5 +106,4 @@ public class DebugWindow extends JFrame implements ActionListener {
 			listWindow.setVisible(true);
 		}
 	}
-
 }
