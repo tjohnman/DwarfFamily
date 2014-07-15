@@ -88,33 +88,6 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
             this.setMinimumSize(new Dimension(800, 600));
     }
 
-    
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-        if(e.getSource() == dataList)
-        {
-            try {
-                int index = dataList.locationToIndex(e.getPoint());
-                Dwarf dwarf = dwarfList.get(index);
-                showDwarfData(dwarf);
-            } catch (BadLocationException ex) {
-                Logger.getLogger(DwarfListWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if(e.getSource() == textArea)
-        {
-            Element ele = doc.getCharacterElement(textArea.viewToModel(e.getPoint()));
-            AttributeSet as = ele.getAttributes();
-            ChildrenLinkListener fla = (ChildrenLinkListener)as.getAttribute("linkact");
-            if(fla != null)
-            {
-                fla.execute();
-            }
-        }
-    }
-
     public void showDwarfData(Dwarf dwarf) throws BadLocationException
     {
         doc.remove(0, doc.getLength());
@@ -200,11 +173,38 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if(e.getSource() == dataList)
+        {
+            try {
+                int index = dataList.locationToIndex(e.getPoint());
+                Dwarf dwarf = dwarfList.get(index);
+                showDwarfData(dwarf);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(DwarfListWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if(e.getSource() == textArea)
+        {
+            Element ele = doc.getCharacterElement(textArea.viewToModel(e.getPoint()));
+            AttributeSet as = ele.getAttributes();
+            ChildrenLinkListener fla = (ChildrenLinkListener)as.getAttribute("linkact");
+            if(fla != null)
+            {
+                fla.execute();
+            }
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mousePressed(e);
+        
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+        
     }
 
     @Override
