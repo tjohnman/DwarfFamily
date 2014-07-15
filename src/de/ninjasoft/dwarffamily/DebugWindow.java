@@ -76,7 +76,7 @@ public class DebugWindow extends JFrame implements ActionListener {
 		if ("import debug legends".equals(e.getActionCommand())) {
 			xmlImportButton.setEnabled(false);
 			final JFileChooser chooser = new JFileChooser();
-                        chooser.setFileFilter(new _xmlFileFilterImpl());
+                      //  chooser.setFileFilter(new _xmlFileFilterImpl());
 			if(chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
                         {
                             xmlImportButton.setEnabled(true);
