@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Consumer;
 import javax.swing.JOptionPane;
@@ -246,7 +247,7 @@ public class Control {
             return null;
         }
         
-        Races.sort(Comparator.naturalOrder());
+        Collections.sort(Races);
         for(int i=0; i<Races.size(); i++)
         {
             String s = Races.get(i);
