@@ -290,8 +290,6 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(raceComboBox.getSelectedItem().toString().toUpperCase());
-        System.out.println(Control.activeRaceName.toUpperCase());
         if(e.getSource() == raceComboBox && e.getActionCommand() == "comboBoxChanged" &&
            raceComboBox.getSelectedItem().toString().toUpperCase().compareTo(Control.activeRaceName.toUpperCase()) != 0)
         {
