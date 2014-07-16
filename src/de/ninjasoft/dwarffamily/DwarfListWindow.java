@@ -2,6 +2,7 @@ package de.ninjasoft.dwarffamily;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,7 +76,7 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
         styleBold = textArea.addStyle("bold", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
         StyleConstants.setBold(styleBold, true);
 
-        JPanel topArea = new JPanel();
+        JPanel topArea = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topArea.setLayout(new BoxLayout(topArea, BoxLayout.X_AXIS));
 
         JPanel bottomArea = new JPanel();
@@ -83,12 +84,13 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
 
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().setMinimumSize(new Dimension(800, 600));
-
-        topArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         
-        topArea.add(new JLabel("Race: "));
+        JLabel raceLabel = new JLabel("Race: ");
+        raceLabel.setMaximumSize(new Dimension(40, 20));
         
+        topArea.add(raceLabel);
         topArea.add(raceComboBox);
+        topArea.setAlignmentX(JComponent.LEFT_ALIGNMENT);
         topArea.setMaximumSize(new Dimension(800, 20));
         
         this.setMinimumSize(new Dimension(800, 600));
