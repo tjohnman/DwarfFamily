@@ -25,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
@@ -159,7 +160,7 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
         Style regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
         StyleConstants.setForeground(regularBlue, Color.BLUE);
         StyleConstants.setUnderline(regularBlue, true);
-        regularBlue.addAttribute("linkFamTree", new FamilyTreeLinkListener(dwarf.getName(), this));
+        regularBlue.addAttribute("linkFamTree", new FamilyTreeLinkListener(dwarf.getName(), dwarfList));
         doc.insertString(doc.getLength(), "view family tree", regularBlue);
         
         doc.insertString(doc.getLength(), ")\n", stylePlain);
@@ -368,17 +369,30 @@ class ChildrenLinkListener extends AbstractAction
 class FamilyTreeLinkListener extends AbstractAction
 {
     private final String textLink;
-    private final DwarfListWindow window;
+    private final ArrayList<Dwarf> dwarfList;
 
-    FamilyTreeLinkListener(String textLink, DwarfListWindow win)
+    FamilyTreeLinkListener(String textLink, ArrayList<Dwarf> dwarves)
     {
         this.textLink = textLink;
-        this.window = win;
+        dwarfList = dwarves;
     }
 
     protected void execute()
     {
-        System.out.println(textLink);
+        int origin = -1;
+        String name = textLink.toLowerCase();
+        for(int i=0; i<dwarfList.size(); i++)
+        {
+            if(dwarfList.get(i).getName().equals(name))
+            {
+                origin = i;
+                break;
+            }
+        }
+        VisualExplorerWindow explorerWindow;
+        explorerWindow = new VisualExplorerWindow(dwarfList, origin);
+        explorerWindow.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        explorerWindow.setVisible(true);
     }
 
     @Override

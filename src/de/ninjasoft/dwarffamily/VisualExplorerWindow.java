@@ -8,6 +8,7 @@ package de.ninjasoft.dwarffamily;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
@@ -25,20 +26,29 @@ import javax.swing.JPanel;
  */
 public class VisualExplorerWindow extends JFrame implements MouseListener, MouseMotionListener {
     
-    final private ArrayList<Dwarf> dwarfList;
-    final private Panel drawPanel;
+    private ArrayList<Dwarf> dwarfList = null;
+    private FamilyTreePanel drawPanel = null;
+    private Dwarf originDwarf = null;
     
     private int drag_start_x, drag_start_y, panel_drag_start_x, panel_drag_start_y;
     
-    public VisualExplorerWindow(ArrayList<Dwarf> dwarves)
+    public VisualExplorerWindow(ArrayList<Dwarf> dwarves, int origin)
     {
-        super("Visual explorer");
+        super("Loading...");
+        if(origin == -1)
+        {
+            System.err.println("Invalid dwarf index passed to VisualExplorerWindow");
+            return;
+        }
+        this.setTitle("Family tree of " + dwarves.get(origin).getCasedName());
         
         dwarfList = dwarves;
-        drawPanel = new Panel();
+        originDwarf = dwarves.get(origin);
+        drawPanel = new FamilyTreePanel(dwarfList, originDwarf);
         
         this.add(drawPanel);
         this.pack();
+        drawPanel.centerOnOrigin();
         
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -49,6 +59,10 @@ public class VisualExplorerWindow extends JFrame implements MouseListener, Mouse
 
     @Override
     public void mouseClicked(MouseEvent me) {
+        if(me.getButton() == MouseEvent.BUTTON3)
+        {
+            drawPanel.centerOnOrigin();
+        }
     }
 
     @Override
@@ -83,13 +97,23 @@ public class VisualExplorerWindow extends JFrame implements MouseListener, Mouse
     }
 }
 
-class Panel extends JPanel
+class FamilyTreePanel extends JPanel
 {
     public int camera_x, camera_y;
+    Dwarf originDwarf = null;
+    ArrayList<Dwarf> dwarfList;
     
-    public Panel()
+    public FamilyTreePanel(ArrayList<Dwarf> dwarves, Dwarf origin)
     {
-        
+        dwarfList = dwarves;
+        originDwarf = origin;
+    }
+    
+    public void centerOnOrigin()
+    {
+        camera_x = -getWidth() / 2;
+        camera_y = -getHeight() / 2;
+        repaint();
     }
     
     @Override
@@ -101,11 +125,20 @@ class Panel extends JPanel
     @Override
     public void paintComponent(Graphics g)
     {
+        if(originDwarf == null) return; // Not ready yet.
+        
         super.paintComponent(g);
         
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
-        g.drawString("This is a test", 10 - camera_x, 10 - camera_y);
+        drawCenteredString(g, originDwarf.getCasedName(), 0, 0);
+    }
+    
+    private void drawCenteredString(Graphics g, String str, int x, int y)
+    {
+        FontMetrics fontMetrics = g.getFontMetrics();
+        int width = fontMetrics.stringWidth(str);
+        g.drawString(str, x-camera_x - width/2, y-camera_y -fontMetrics.getHeight()/2);
     }
 }
