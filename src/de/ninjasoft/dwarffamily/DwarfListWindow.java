@@ -152,13 +152,25 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
 
         doc.insertString(doc.getLength(), "ID: "    + 	dwarf.getId() + "\n", stylePlain);
         doc.insertString(doc.getLength(), "Name: ", stylePlain);
-        doc.insertString(doc.getLength(), dwarf.getCasedName() + "\n", styleBold);
+        doc.insertString(doc.getLength(), dwarf.getCasedName(), styleBold);
+        
+        doc.insertString(doc.getLength(), " (", stylePlain);
+        
+        Style regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+        StyleConstants.setForeground(regularBlue, Color.BLUE);
+        StyleConstants.setUnderline(regularBlue, true);
+        regularBlue.addAttribute("linkFamTree", new FamilyTreeLinkListener(dwarf.getName(), this));
+        doc.insertString(doc.getLength(), "view family tree", regularBlue);
+        
+        doc.insertString(doc.getLength(), ")\n", stylePlain);
+        
         doc.insertString(doc.getLength(), "Gender: "+ 	dwarf.getCasedGender() + "\n", stylePlain);
+        
 
         doc.insertString(doc.getLength(), "Mother: ", stylePlain);
         if(dwarf.getMother() != null)
         {
-            Style regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+            regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
             StyleConstants.setForeground(regularBlue, Color.BLUE);
             StyleConstants.setUnderline(regularBlue, true);
             regularBlue.addAttribute("linkact", new ChildrenLinkListener(dwarf.getMother().getName(), this));
@@ -170,7 +182,7 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
         doc.insertString(doc.getLength(), "Father: ", stylePlain);
         if(dwarf.getFather() != null)
         {
-            Style regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+            regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
             StyleConstants.setForeground(regularBlue, Color.BLUE);
             StyleConstants.setUnderline(regularBlue, true);
             regularBlue.addAttribute("linkact", new ChildrenLinkListener(dwarf.getFather().getName(), this));
@@ -187,7 +199,7 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
             doc.insertString(doc.getLength(), "Children: \n", stylePlain);
             for(int i=0; i<dwarf.getChildren().size(); i++)
             {
-                Style regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
+                regularBlue = textArea.addStyle("regularBlue", StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE));
                 StyleConstants.setForeground(regularBlue, Color.BLUE);
                 StyleConstants.setUnderline(regularBlue, true);
                 regularBlue.addAttribute("linkact", new ChildrenLinkListener(dwarf.getChildren().get(i).getName(), this));
@@ -250,6 +262,12 @@ public class DwarfListWindow extends JFrame implements MouseListener, KeyListene
             if(fla != null)
             {
                 fla.execute();
+            }
+            
+            FamilyTreeLinkListener fmtact = (FamilyTreeLinkListener)as.getAttribute("linkFamTree");
+            if(fmtact != null)
+            {
+                fmtact.execute();
             }
         }
     }
@@ -338,6 +356,29 @@ class ChildrenLinkListener extends AbstractAction
     protected void execute()
     {
         window.selectDwarfWithName(textLink);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        execute();
+    }
+}
+
+class FamilyTreeLinkListener extends AbstractAction
+{
+    private final String textLink;
+    private final DwarfListWindow window;
+
+    FamilyTreeLinkListener(String textLink, DwarfListWindow win)
+    {
+        this.textLink = textLink;
+        this.window = win;
+    }
+
+    protected void execute()
+    {
+        System.out.println(textLink);
     }
 
     @Override

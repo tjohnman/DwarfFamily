@@ -51,11 +51,6 @@ public class DebugWindow extends JFrame implements ActionListener {
         viewDwarvesButton.setEnabled(false);
         buttonLayout.add(viewDwarvesButton);
 
-        visualExplorerButton.setActionCommand("open visual explorer");
-        visualExplorerButton.addActionListener(this);
-        visualExplorerButton.setEnabled(false);
-        buttonLayout.add(visualExplorerButton);
-
         getContentPane().add(buttonLayout);
         getContentPane().add(progressBar);
 
@@ -72,18 +67,10 @@ public class DebugWindow extends JFrame implements ActionListener {
         gedExportButton.setEnabled(true);
         xmlImportButton.setEnabled(true);
         viewDwarvesButton.setEnabled(true);
-        visualExplorerButton.setEnabled(true);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if("open visual explorer".equals(e.getActionCommand()))
-        {
-            VisualExplorerWindow explorerWindow = new VisualExplorerWindow(dwarfList);
-            explorerWindow.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            explorerWindow.setVisible(true);
-        }
-        
+    public void actionPerformed(ActionEvent e) {        
         if ("export test".equals(e.getActionCommand())) {
             try {
                     Control.GedExportTest(dwarfList);
